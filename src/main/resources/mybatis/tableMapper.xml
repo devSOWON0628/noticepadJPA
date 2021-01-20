@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.DataMapper">
+ 	<select id="selectTest" resultType="String">
+ 		select 1
+ 	</select>
+ 	
+ 	<insert parameterType="String" id="insertPost">
+  	INSERT INTO board_table ( 
+  				  title
+  				, writer
+  				, content
+  				, reg_time
+  				) 
+  	VALUES (
+  			  #{title}
+  			, #{writer}
+  			, #{content}
+  			, now());
+  	</insert>
+  	
+  	<select id="selectAllPost" resultType="com.example.demo.vo.Post">
+  	SELECT 	*
+  	  FROM board_table;
+  	</select>
+  	
+  	<select id="selectOnePost" resultType="com.example.demo.vo.Post">
+  	SELECT *
+  	  FROM board_table
+  	 WHERE id = #{id}
+  	</select>
+  	
+  	<delete id="deleteAllPost">
+  	DELETE 
+  	  FROM board_table
+  	</delete>
+  	
+	<select id="countBoard" resultType="java.lang.Integer">
+	SELECT COUNT(*) 
+	  FROM  board_table 
+	</select>
+	<!-- 최근이 1 예전게 뒤로 밀림 -->
+	<select id="selectAllBoard" resultType="com.example.demo.vo.Post" parameterType="String">	
+	SELECT *
+	  FROM (SELECT rownum as RN , t.*
+	          FROM board_table as t
+	          ORDER BY reg_time desc)
+	 WHERE RN between #{start} and #{end}
+	 ;
+	</select>
+	
+	<update id="updatePost">
+	UPDATE board_table 
+	SET   title = #{title}
+		, writer = #{writer}
+		, content = #{content}
+		, reg_time = now() 
+	WHERE (id = #{id});
+	</update>
+	
+	<delete id="deleteOnePost">
+	DELETE 
+	  FROM board_table 
+	 WHERE (id = #{id});
+	</delete>
+	
+</mapper>
